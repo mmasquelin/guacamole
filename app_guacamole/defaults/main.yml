@@ -1,0 +1,42 @@
+---
+# Local vars for Apache Guacamole Role
+
+# Version number to install
+guacamole_version: 1.2.0
+
+# Installation repository
+guacamole_src_dir: /usr/local/src
+guacamole_conf_dir: /etc/guacamole
+
+# Installation source
+guacamole_dl_url: "{{ 'http://apache.org/dyn/closer.cgi?action=download&filename=guacamole/' + guacamole_version }}"
+
+# Files to download
+guacamole_client_package: "{{ 'guacamole-' + guacamole_version + '.war' }}"
+guacamole_jdbc_ext: "{{ 'guacamole-auth-jdbc-' + guacamole_version }}"
+guacamole_ldap_ext: "{{ 'guacamole-auth-ldap-' + guacamole_version + '.tar.gz' }}"
+guacamole_server_package: "{{ 'guacamole-server-' + guacamole_version + '.tar.gz' }}"
+
+# Unix user/group details
+guacamole_user: "guacd"
+
+# Default admin settings
+guacamole_admin_user: "sysad"
+guacamole_admin_pass: "guacadmin"
+
+# Jetty settings
+jetty_listen_address: "127.0.0.1"
+jetty_args: "jetty.port=8080"
+jetty_debug_state: "no"
+jetty_webapps_location: "/var/lib/jetty9/webapps"
+
+# LDAP settings
+ldap_base_dn: "dc=example,dc=com"
+ldap_encryption_method: "none"
+ldap_hostname: "localhost"
+ldap_port_number: 389
+ldap_users_dn: "{{ 'ou=People,' + ldap_base_dn }}"
+ldap_username_attribute: uid
+ldap_bind_dn: "{{ 'cn=manager,' + ldap_base_dn}} "
+ldap_bind_dn_pwd: "secret"
+

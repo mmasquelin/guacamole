@@ -1,0 +1,51 @@
+---
+# Task file to install and configure jetty9
+
+- name: Install Java servlet engine and webserver
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: true
+  loop:
+    - default-jre
+    - jetty9
+    - libjetty9-extra-java
+    - libjetty9-java
+
+#- name: Configure jetty
+#  file:
+#    path: /etc/default/jetty
+#    state: touch
+#    mode: u=rw,g=rw,o=r
+
+- name: Configure start on boot
+  lineinfile:
+    dest: /etc/default/jetty9
+    regexp: '^NOSTART='
+    line: "NOSTART=0"
+    create: yes
+    state: present
+
+- name: Configure jetty to listen only on localhost connections
+  lineinfile:
+    dest: /etc/default/jetty9
+    regexp: "^JETTY_HOST="
+    line: "JETTY_HOST={{ jetty_listen_address }}"
+    create: yes
+    state: present
+
+- name: Configure jetty extra args
+  lineinfile:
+    dest: /etc/default/jetty9
+    regexp: "^JETTY_ARGS="
+    line: "JETTY_ARGS={{ jetty_args }}"
+    create: yes
+    state: present
+
+- name: Disable verbose mode 
+  lineinfile:
+    dest: /etc/default/jetty9
+    regexp: "^VERBOSE="
+    line: "VERBOSE={{ jetty_debug_state }}"
+    create: yes
+    state: present

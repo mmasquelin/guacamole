@@ -1,0 +1,17 @@
+---
+- name: Playbook to deploy Apache Guacamole
+  hosts: debian
+  vars:
+    - guacamole_ldap_auth: true
+    - guacamole_postgresql_backend: truapt upde
+    - postgresql_hostname: "localhost"
+    - postgresql_port: 5432
+    - postgresql_database: "guacdb"
+    - postgresql_username: "guacdb_user"
+    - postgresql_password: "secret"
+  vars_files:
+    - ./custom_pg_settings.yml
+  roles:
+    - role: geerlingguy.postgresql
+      when: guacamole_postgresql_backend|bool
+    - role: app_guacamole

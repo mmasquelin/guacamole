@@ -1,0 +1,38 @@
+# {{ ansible_managed }}
+
+# Hostname and port of guacamole proxy daemon
+guacd-hostname: localhost
+guacd-port: 4822
+
+# Location to read extra .jar's from
+lib-directory:  "{{ guacamole_conf_dir + '/lib' }}"
+
+# Authentication provider class
+{% if guacamole_ldap_auth %}
+auth-provider: net.sourceforge.guacamole.net.auth.ldap.LDAPAuthenticationProvider
+{% else %}
+auth-provider: net.sourceforge.guacamole.net.basic.BasicFileAuthenticationProvider
+{% endif %}
+
+# Properties used by BasicFileAuthenticationProvider
+basic-user-mapping: "{{ guacamole_conf_dir + '/user-mapping.xml' }}"
+
+{% if guacamole_ldap_auth %}
+# Required LDAP parameters
+ldap-hostname: {{ ldap_hostname }}
+ldap-port: {{ ldap_port_number }}
+ldap-encryption-method: {{ ldap_encryption_method }}
+ldap-user-base-dn: {{ ldap_users_dn }}
+ldap-username-attribute: {{ ldap_username_attribute }}
+ldap-search-bind-dn: {{ ldap_bind_dn }}
+ldap-search-bind-password: {{ ldap_bind_dn_pwd }}
+{% endif %}
+
+{% if guacamole_postgresql_backend %}
+# PostgreSQL database settings
+postgresql-hostname: {{ postgresql_hostname }}
+postgresql-port: {{ postgresql_port }}
+postgresql-database: {{ postgresql_database }}
+postgresql-username: {{ postgresql_username }}
+postgresql-password: {{ postgresql_password }}
+{% endif %}

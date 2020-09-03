@@ -1,0 +1,12 @@
+---
+# Task file for Apache Guacamole client
+
+- name: Download Guacamole client package
+  get_url:
+    url: "{{ guacamole_dl_url + '/binary/' + guacamole_client_package }}"
+    dest: "{{ jetty_webapps_location + '/guacamole.war' }}"
+
+- name: Restart jetty9
+  systemd:
+    state: restarted
+    name: jetty9

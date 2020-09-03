@@ -1,0 +1,26 @@
+---
+# Tasks file for Apache Guacamole
+
+- name: Install base packages to build Guacamole
+  include_tasks: 01-install_packages-debian.yml
+  when: ansible_os_family == "Debian"
+
+- name: Install jetty9
+  include_tasks: 02-install_jetty-debian.yml
+  when: ansible_os_family == "Debian"
+
+- name: Download and build Guacamole
+  include_tasks: 03-install_guacd-debian.yml
+  when: ansible_os_family == "Debian"
+
+- name: Configure Guacamole server component
+  include_tasks: 04-configure_guacd-debian.yml
+  when: ansible_os_family == "Debian"
+
+- name: Install Guacamole client component for jetty9
+  include_tasks: 05-install_guacamole_client-debian.yml
+  when: ansible_os_family == "Debian"
+
+- name: Install Guacamole required extensions
+  include_tasks: 06-install_guacamole_extensions-debian.yml
+  when: ansible_os_family == "Debian"

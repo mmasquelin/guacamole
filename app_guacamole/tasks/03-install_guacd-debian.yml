@@ -1,0 +1,45 @@
+---
+# Task file for guacd daemon
+
+- name: Download Guacamole server package
+  get_url:
+    url: "{{ guacamole_dl_url + '/source/' + guacamole_server_package }}"
+    dest: "{{ guacamole_src_dir }}"
+
+- name: Extract Guacamole server package
+  unarchive:
+    src: "{{ guacamole_src_dir + '/' + guacamole_server_package }}"
+    dest: "{{ guacamole_src_dir }}"
+    remote_src: true
+
+- name: Create guacd group
+  group:
+    name: "{{ guacamole_user }}"
+    state: present
+
+- name: Create guacd user
+  user:
+    name: "{{ guacamole_user }}"
+    comment: Guacamole dedicated user
+    shell: /bin/false
+    group: "{{ guacamole_user }}"
+    expires: -1
+    create_home: true
+    system: true
+
+- name: Configure build settings for Guacamole server
+  command: ./configure --with-init-dir=/etc/init.d --with-systemd-dir=/etc/systemd/system
+  args:
+    chdir: "{{ guacamole_src_dir + '/guacamole-server-' + guacamole_version }}"
+
+- name: Compiling Guacamole server component from sources
+  make:
+    chdir: "{{ guacamole_src_dir + '/guacamole-server-' + guacamole_version }}"
+
+- name: Installing all Guacamole server parts
+  make:
+    chdir: "{{ guacamole_src_dir + '/guacamole-server-' + guacamole_version }}"
+    target: install
+
+- name: Run ldconfig to update system cache libraries
+  command: ldconfig

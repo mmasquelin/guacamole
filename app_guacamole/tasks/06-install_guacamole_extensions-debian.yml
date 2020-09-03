@@ -1,0 +1,44 @@
+---
+# Task file for Apache Guacamole extensions
+
+- name: Download Guacamole LDAP extension
+  get_url:
+    url: "{{ guacamole_dl_url + '/binary/' + guacamole_ldap_ext }}"
+    dest: "{{ guacamole_conf_dir + '/extensions/' }}"
+  when: guacamole_ldap_auth|bool
+
+- name: Extract Guacamole LDAP extension package
+  unarchive:
+    src: "{{ guacamole_conf_dir + '/extensions/' + guacamole_ldap_ext }}"
+    dest: "{{ guacamole_conf_dir + '/extensions/' }}"
+    owner:  "{{ guacamole_user }}"
+    group: "{{ guacamole_user }}"
+    remote_src: true
+  when: guacamole_ldap_auth|bool
+  
+- name: Download Guacamole JDBC extension
+  get_url:
+    url: "{{ guacamole_dl_url + '/binary/' + guacamole_jdbc_ext + '.tar.gz' }}"
+    dest: "{{ guacamole_conf_dir + '/extensions/' }}"
+  when: guacamole_postgresql_backend|bool
+
+- name: Extract Guacamole JDBC extension package
+  unarchive:
+    src: "{{ guacamole_conf_dir + '/extensions/' + guacamole_jdbc_ext + '.tar.gz' }}"
+    dest: "{{ guacamole_conf_dir + '/extensions/' }}"
+    owner:  "{{ guacamole_user }}"
+    group: "{{ guacamole_user }}"
+    remote_src: true
+  when: guacamole_postgresql_backend|bool
+
+- name: Run initial queries from SQL file to provision guacd database
+  postgresql_query:
+    db: "{{ }}"
+    path_to_script: "{{ guacamole_conf_dir + '/extensions/' + guacamole_jdbc_ext + '/postgresql/schema/001-create-schema.sql' }}"
+    login_user: 
+    login_password:
+
+- name: Restart jetty9
+  systemd:
+    state: restarted
+    name: jetty9

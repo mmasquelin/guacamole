@@ -1,0 +1,64 @@
+---
+# Task file for guacd daemon configuration
+
+- name: Enable service guacd and ensure it is not masked
+  systemd:
+    name: guacd
+    enabled: yes
+    masked: no
+
+- name: Create base folder to store entire config
+  file:
+    path: "{{ guacamole_conf_dir }}"
+    state: directory
+    mode: '0775'
+    owner: "{{ guacamole_user }}"
+    group: "{{ guacamole_user }}"
+
+- name: Create folder to store extensions
+  file:
+    path: "{{ guacamole_conf_dir + '/extensions' }}"
+    state: directory
+    mode: '0775'
+    owner: "{{ guacamole_user }}"
+    group: "{{ guacamole_user }}"
+
+- name: Create folder to store libs
+  file:
+    path: "{{ guacamole_conf_dir + '/lib' }}"
+    state: directory
+    mode: '0775'
+    owner: "{{ guacamole_user }}"
+    group: "{{ guacamole_user }}"
+
+- name: Create necessary symlink for jetty9
+  file:
+    src: /etc/guacamole
+    dest: /usr/share/jetty9/.guacamole
+    owner: guacd
+    group: guacd
+    state: link
+
+- name: Create a guacamole.properties file from a template
+  template:
+    src: guacamole.properties.j2
+    dest: "{{ guacamole_conf_dir + '/guacamole.properties' }}"
+    owner: guacd
+    group: guacd
+    mode: '0660'
+    backup: yes
+
+- name: Create a user-mapping.xml file from a template
+  template:
+    src: user-mapping.xml.j2
+    dest: "{{ guacamole_conf_dir + '/user-mapping.xml' }}"
+    owner: guacd
+    group: guacd
+    mode: '0660'
+    backup: yes
+
+- name: Restart service guacd, also issue daemon-reload to pick up config changes
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: guacd

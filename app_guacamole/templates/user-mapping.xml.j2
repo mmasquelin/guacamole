@@ -1,0 +1,25 @@
+<!-- {{ ansible_managed }} -->
+
+<user-mapping>
+        
+    <!-- Per-user authentication and config information -->
+
+    <!-- A user using md5 to hash the password guacadmin 
+    user and its md5 hashed password below is used to login
+    to Guacamole Web UI -->
+
+    <authorize 
+            username="{{ guacamole_admin_user}}"
+            password="5f4dcc3b5aa765d61d8327deb882cf99"
+            encoding="md5">
+
+        <!-- First authorized Remote connection -->
+        <connection name="localhost">
+            <protocol>ssh</protocol>
+            <param name="hostname">127.0.0.1</param>
+            <param name="port">22</param>
+        </connection>
+
+    </authorize>
+
+</user-mapping>
