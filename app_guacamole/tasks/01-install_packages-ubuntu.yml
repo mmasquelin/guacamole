@@ -1,0 +1,37 @@
+---
+# Task file to install all required dependencies for compiling Guacamole
+
+- name: Install Guacamole requirements
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: true
+  loop:
+    - acl
+    - build-essential 
+    - curl
+    - ntpdate
+    - libcairo2-dev 
+    - libjpeg8-turbo-dev 
+    - libavformat-dev
+    - libtool-bin 
+    - libossp-uuid-dev 
+    - libavcodec-dev 
+    - libavutil-dev
+    - libswscale-dev 
+    - freerdp2-dev 
+    - libpango1.0-dev 
+    - libssh2-1-dev 
+    - libtelnet-dev
+    - libvncserver-dev 
+    - libwebsockets-dev
+    - libpulse-dev 
+    - libssl-dev
+    - libvorbis-dev 
+    - libwebp-dev
+    - libpng-dev
+    - python3-psycopg2
+    - libpq5
+    - sudo
+    - wget
+    - neovim

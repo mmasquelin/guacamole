@@ -3,7 +3,7 @@
   hosts: debian
   vars:
     - guacamole_ldap_auth: true
-    - guacamole_postgresql_backend: truapt upde
+    - guacamole_postgresql_backend: true
     - postgresql_hostname: "localhost"
     - postgresql_port: 5432
     - postgresql_database: "guacdb"
